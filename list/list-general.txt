@@ -669,3 +669,5 @@ durevpn.com
 durevpn.com:*
 *.durevpn.com
 *.durevpn.com:*
+*.spigotmc.org
+spigotmc.org
