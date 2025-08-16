@@ -668,5 +668,4 @@ waveform.com:*
 durevpn.com
 durevpn.com:*
 *.durevpn.com
-
 *.durevpn.com:*
