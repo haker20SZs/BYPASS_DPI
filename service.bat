@@ -22,14 +22,20 @@ echo ========================
 echo 1. Install Service (using %BAT_NAME%)
 echo 2. Remove Services
 echo 3. Check Status
+echo 4. Start Service
+echo 5. Stop Service
+echo 6. Restart Service
 echo 0. Exit
 echo.
 
-choice /c 1230 /n /m "Enter choice: "
+choice /c 1234560 /n /m "Enter choice: "
 
 if %errorlevel% equ 1 goto service_install
 if %errorlevel% equ 2 goto service_remove
 if %errorlevel% equ 3 goto service_status
+if %errorlevel% equ 4 goto service_start
+if %errorlevel% equ 5 goto service_stop
+if %errorlevel% equ 6 goto service_restart
 if %errorlevel% equ 4 exit /b
 goto menu
 
@@ -201,6 +207,109 @@ if !errorlevel! equ 0 (
 
 pause
 goto menu
+
+:: Запуск службы
+:service_start
+cls
+echo Starting %SRVCNAME% service...
+echo ----------------------------
+
+:: Проверка существования службы
+call :check_service_exist "%SRVCNAME%"
+if !errorlevel! neq 0 (
+    echo Service %SRVCNAME% not found. Please install first.
+    pause
+    goto menu
+)
+
+:: Проверка текущего статуса
+call :get_service_status "%SRVCNAME%"
+if "!service_status!"=="RUNNING" (
+    echo Service %SRVCNAME% is already running.
+    pause
+    goto menu
+)
+
+:: Запуск службы
+sc start %SRVCNAME%
+if !errorlevel! equ 0 (
+    echo Service %SRVCNAME% started successfully.
+) else (
+    echo Failed to start service! Error code: !errorlevel!
+
+    :: Показать подробный статус службы
+    sc query %SRVCNAME%
+)
+
+pause
+goto menu
+
+:: Остановка службы
+:service_stop
+cls
+echo Stopping %SRVCNAME% service...
+echo ----------------------------
+
+call :check_service_exist "%SRVCNAME%"
+if !errorlevel! neq 0 (
+    echo Service %SRVCNAME% not found.
+    pause
+    goto menu
+)
+
+call :get_service_status "%SRVCNAME%"
+if "!service_status!"=="STOPPED" (
+    echo Service %SRVCNAME% is already stopped.
+    pause
+    goto menu
+)
+
+net stop %SRVCNAME%
+if !errorlevel! equ 0 (
+    echo Service %SRVCNAME% stopped successfully.
+) else (
+    echo Failed to stop service! Error code: !errorlevel!
+    sc query %SRVCNAME%
+)
+
+pause
+goto menu
+
+:: Перезапуск службы
+:service_restart
+cls
+echo [Restarting Service: %SRVCNAME%]
+echo -------------------------------
+
+:: Остановка службы
+call :service_stop_no_pause
+
+:: Небольшая задержка
+timeout /t 3 /nobreak >nul
+
+:: Запуск службы
+call :service_start_no_pause
+
+pause
+goto menu
+
+:: Внутренняя функция остановки (без паузы)
+:service_stop_no_pause
+sc query %SRVCNAME% >nul 2>&1 || exit /b
+for /f "tokens=3" %%s in ('sc query %SRVCNAME% ^| findstr STATE') do set "status=%%s"
+set "status=%status: =%"
+if "%status%"=="RUNNING" (
+    net stop %SRVCNAME% >nul || taskkill /F /FI "SERVICES eq %SRVCNAME%" >nul
+)
+exit /b
+
+:: Внутренняя функция запуска (без паузы)
+:service_start_no_pause
+sc query %SRVCNAME% >nul 2>&1 || exit /b
+for /f "tokens=3" %%s in ('sc query %SRVCNAME% ^| findstr STATE') do set "status=%%s"
+set "status=%status: =%"
+if not "%status%"=="RUNNING" sc start %SRVCNAME% >nul
+exit /b
 
 :: Функция для получения статуса службы
 :get_service_status
