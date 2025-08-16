@@ -581,7 +581,6 @@ www.whiterabbitneo.com
 *.curseforge.com
 challenges.cloudflare.com
 mediafilez.forgecdn.net
-oy2yk3lgsxa88y4lw7fvr6j0zyo9fz5d.aternos.online
 fonts.gstatic.com
 zamerka.com
 kino.pub
@@ -669,4 +668,5 @@ waveform.com:*
 durevpn.com
 durevpn.com:*
 *.durevpn.com
+
 *.durevpn.com:*
