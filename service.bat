@@ -36,7 +36,7 @@ if %errorlevel% equ 3 goto service_status
 if %errorlevel% equ 4 goto service_start
 if %errorlevel% equ 5 goto service_stop
 if %errorlevel% equ 6 goto service_restart
-if %errorlevel% equ 4 exit /b
+if %errorlevel% equ 7 exit /b
 goto menu
 
 :: Установка службы с использованием general.bat
