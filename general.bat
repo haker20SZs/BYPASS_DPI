@@ -10,7 +10,7 @@ set "DIR=%~dp0"
 
 --filter-udp=443 --ipset='%DIR%\ipset\ipset-cloudflare.txt' --dpi-desync=fake --dpi-desync-repeats=11 --dpi-desync-fake-quic='%DIR%\app\quic_initial_www_google_com.bin' --new ^
 
---filter-tcp=443,1024-65535 --ipset='%DIR%\ipset\ipset-all.txt' --dpi-desync=fake,multidisorder --dpi-desync-split-pos=midsld --dpi-desync-repeats=6 --dpi-desync-fooling=md5sig,badseq --new ^
+--filter-tcp=1024-65535 --ipset='%DIR%\ipset\ipset-all.txt' --dpi-desync=fake,multidisorder --dpi-desync-split-pos=midsld --dpi-desync-repeats=6 --dpi-desync-fooling=md5sig,badseq --new ^
 
 --filter-tcp=443 --hostlist='%DIR%\list\list-general.txt' --dpi-desync=split --dpi-desync-split-pos=1 --dpi-desync-autottl --dpi-desync-fooling=badseq --dpi-desync-repeats=8 --new ^
 
@@ -19,3 +19,4 @@ set "DIR=%~dp0"
 --filter-tcp=80 --ipset='%DIR%\ipset\ipset-cloudflare.txt' --dpi-desync=fake,fakedsplit --dpi-desync-autottl=2 --dpi-desync-fooling=md5sig --ipset='%DIR%\ipset\ipset-cloudflare.txt' --dpi-desync=fake,multidisorder --dpi-desync-split-pos=1,midsld --dpi-desync-repeats=11 --dpi-desync-fooling=md5sig
 
 exit
+
