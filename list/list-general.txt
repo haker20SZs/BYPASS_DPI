@@ -1,3 +1,7 @@
+frankerfacez.com
+ffzap.com
+*.frankerfacez.com
+*.ffzap.com
 stable.dl2.discordapp.net
 cloudflare-ech.com
 *.discord.app:*

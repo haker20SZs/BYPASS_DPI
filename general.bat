@@ -2,7 +2,15 @@
 
 set "DIR=%~dp0"
 
-%DIR%\app\winws.exe --wf-tcp=80,443 --wf-udp=443,50000-50100 --filter-udp=50000-50100 --ipset='%DIR%\ipset\ipset-discord.txt' --dpi-desync=fake --dpi-desync-any-protocol --dpi-desync-cutoff=d3 --dpi-desync-repeats=6 --new ^
+cd /d "%~dp0"
+
+%DIR%\app\winws.exe --wf-tcp=80,443,1024-65535 --wf-udp=443,50000-50100,1024-65535 ^
+
+--filter-tcp=443,1024-65535 --ipset="%DIR%\ipset\ipset-games.txt" --dpi-desync=fake --dpi-desync-repeats=6 --dpi-desync-fooling=md5sig --dpi-desync-fake-tls="%DIR%\app\tls_clienthello_www_google_com.bin" --new ^
+
+--filter-udp=1024-65535 --ipset="%DIR%\ipset\ipset-all.txt" --dpi-desync=fake --dpi-desync-autottl=2 --dpi-desync-repeats=12 --dpi-desync-any-protocol=1 --dpi-desync-fake-unknown-udp="%DIR%\app\quic_initial_www_google_com.bin" --dpi-desync-cutoff=n3 --new ^
+
+--filter-udp=50000-50100 --ipset='%DIR%\ipset\ipset-discord.txt' --dpi-desync=fake --dpi-desync-any-protocol --dpi-desync-cutoff=d3 --dpi-desync-repeats=6 --new ^
 
 --filter-tcp=443 --hostlist='%DIR%\list\list-general.txt' --dpi-desync=split2 --dpi-desync-split-seqovl=652 --dpi-desync-split-pos=2 --dpi-desync-split-seqovl-pattern='%DIR%\app\tls_clienthello_www_google_com.bin' --new ^
 
