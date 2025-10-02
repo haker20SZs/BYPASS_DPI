@@ -14,6 +14,8 @@ cloudflare-ech.com
 *.discordapp.com:*
 *.discordapp.net
 *.discordapp.net:*
+pornhub.org
+*.pornhub.org
 *.cloudflareinsights.com
 cloudflareinsights.com
 cdn.discordapp.com:*
@@ -694,3 +696,4 @@ discohook.org
 *.discohook.org
 emojipedia.org
 *.emojipedia.org
+
