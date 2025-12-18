@@ -1,0 +1,117 @@
+{
+  "log": {
+    "disabled": true
+  },
+  "outbounds": [
+    {
+      "type": "vless",
+      "tag": "proxy",
+      "server": "",
+      "server_port": 0,
+      "uuid": "",
+      "flow": "",
+      "packet_encoding": "xudp",
+      "transport": {
+        "type": "grpc",
+        "service_name": "",
+        "idle_timeout": "60s",
+        "ping_timeout": "20s",
+        "permit_without_stream": false
+      },
+      "tls": {
+        "enabled": true,
+        "server_name": "", //SNI
+        "utls": {
+          "enabled": true,
+          "fingerprint": "qq" //FP
+        },
+        "reality": {
+          "enabled": true,
+          "public_key": "", //Public-Key
+          "short_id": ""
+        }
+      }
+    },
+    {
+      "type": "direct",
+      "tag": "direct"
+    },
+    {
+      "type": "block",
+      "tag": "block"
+    }
+  ],
+  "dns": {
+    "servers": [
+      {
+        "tag": "dns-remote",
+        "type": "https",
+        "server": "77.88.8.8"
+      },
+      {
+        "type": "udp",
+        "server": "77.88.8.8",
+        "server_port": 53,
+        "tag": "dns-direct"
+      },
+      {
+        "type": "fakeip",
+        "tag": "dns-fake",
+        "inet4_range": "198.18.0.0/15",
+        "inet6_range": "fc00::/18"
+      }
+    ],
+    "rules": [
+        {
+            "clash_mode": "Global",
+            "server": "dns-remote"
+        },
+        {
+            "disable_cache": true,
+            "inbound": "tun-in",
+            "query_type": ["A","AAAA"],
+            "server": "dns-fake"
+        }
+    ],
+    "strategy": "ipv4_only",
+    "independent_cache": true
+  },
+  "inbounds": [
+    {
+      "type": "tun",
+      "tag": "tun-in",
+      "interface_name": "TunTun",
+      "address": "172.19.0.1/30",
+      "mtu": 1500,
+      "stack": "mixed",
+      "endpoint_independent_nat": true,
+      "auto_route": true,
+      "strict_route": true,
+      "sniff": true
+    },
+    {
+      "type": "mixed",
+      "tag": "mixed-in",
+      "listen": "127.0.0.1",
+      "listen_port": 1080
+    }
+  ],
+  "route": {
+    "default_domain_resolver": {
+      "server": "dns-remote",
+      "strategy": "prefer_ipv4"
+    },
+    "rules": [
+      {
+        "protocol": "dns",
+        "action": "hijack-dns"
+      },
+      {
+        "ip_cidr": ["10.0.0.0/8", "172.16.0.0/12", "192.168.0.0/16", "169.254.0.0/16", "224.0.0.0/4", "255.255.255.255"],
+        "outbound": "direct"
+      }
+    ],
+    "final": "proxy",
+    "auto_detect_interface": true
+  }
+}
