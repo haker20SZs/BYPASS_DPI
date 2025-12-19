@@ -6,28 +6,28 @@
     {
       "type": "vless",
       "tag": "proxy",
-      "server": "45.151.30.120",
-      "server_port": 26212,
-      "uuid": "27bec884-cdca-4e93-b357-e1ddf41ae7cf",
+      "server": "",
+      "server_port": ,
+      "uuid": "",
       "flow": "",
       "packet_encoding": "xudp",
       "transport": {
         "type": "grpc",
-        "service_name": "PQ0kd–5VfN;Oq!=",
+        "service_name": "",
         "idle_timeout": "60s",
         "ping_timeout": "20s",
         "permit_without_stream": false
       },
       "tls": {
         "enabled": true,
-        "server_name": "cdn-tinkoff.ru", //SNI
+        "server_name": "", //SNI
         "utls": {
           "enabled": true,
           "fingerprint": "qq" //FP
         },
         "reality": {
           "enabled": true,
-          "public_key": "PAjqUU_IKkby_83nDL4kUvbn1oc48QRYdFhTHlqT-Q8", //Public-Key
+          "public_key": "", //Public-Key
           "short_id": ""
         }
       }
@@ -88,3 +88,4 @@
     "auto_detect_interface": true
   }
 }
+
