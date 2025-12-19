@@ -2,7 +2,7 @@
   "log": {
     "disabled": true
   },
-  #Для браузера и т.д
+  //Для браузера и т.д
   "outbounds": [
     {
       "type": "vless",
