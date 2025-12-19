@@ -1,0 +1,90 @@
+{
+  "log": {
+    "disabled": true
+  },
+  "outbounds": [
+    {
+      "type": "vless",
+      "tag": "proxy",
+      "server": "",
+      "server_port": ,
+      "uuid": "",
+      "flow": "",
+      "packet_encoding": "xudp",
+      "transport": {
+        "type": "grpc",
+        "service_name": "",
+        "idle_timeout": "60s",
+        "ping_timeout": "20s",
+        "permit_without_stream": false
+      },
+      "tls": {
+        "enabled": true,
+        "server_name": "", //SNI
+        "utls": {
+          "enabled": true,
+          "fingerprint": "qq" //FP
+        },
+        "reality": {
+          "enabled": true,
+          "public_key": "", //Public-Key
+          "short_id": ""
+        }
+      }
+    },
+    {
+      "type": "direct",
+      "tag": "direct"
+    }
+  ],
+  "dns": {
+    "servers": [
+      {
+        "tag": "dns-remote",
+        "type": "udp",
+        "server": "1.1.1.1",
+        "detour": "proxy"
+      }
+    ],
+    "strategy": "ipv4_only",
+    "independent_cache": true
+  },
+  "inbounds": [
+    {
+      "type": "tun",
+      "tag": "tun-in",
+      "interface_name": "TunTun",
+      "address": "172.19.0.1/30",
+      "mtu": 1500,
+      "stack": "mixed",
+      "endpoint_independent_nat": true,
+      "auto_route": true,
+      "strict_route": true,
+      "sniff": true
+    },
+    {
+      "type": "socks",
+      "tag": "socks-out",
+      "listen": "0.0.0.0",
+      "listen_port": 1080
+    }
+  ],
+  "route": {
+    "default_domain_resolver": {
+      "server": "dns-remote",
+      "strategy": "prefer_ipv4"
+    },
+    "rules": [
+      {
+        "protocol": "dns",
+        "action": "hijack-dns"
+      },
+      {
+        "ip_cidr": ["10.0.0.0/8", "172.16.0.0/12", "192.168.0.0/16", "169.254.0.0/16", "224.0.0.0/4", "255.255.255.255"],
+        "outbound": "direct"
+      }
+    ],
+    "final": "proxy",
+    "auto_detect_interface": true
+  }
+}
