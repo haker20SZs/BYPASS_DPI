@@ -2,12 +2,43 @@
   "log": {
     "disabled": true
   },
+  //Для браузера и т.д
   "outbounds": [
     {
       "type": "vless",
-      "tag": "proxy",
+      "tag": "proxy-fi",
       "server": "",
-      "server_port": ,
+      "server_port": 0,
+      "uuid": "",
+      "flow": "",
+      "packet_encoding": "xudp",
+      "transport": {
+        "type": "grpc",
+        "service_name": "",
+        "idle_timeout": "60s",
+        "ping_timeout": "20s",
+        "permit_without_stream": false
+      },
+      "tls": {
+        "enabled": true,
+        "server_name": "", //SNI
+        "utls": {
+          "enabled": true,
+          "fingerprint": "qq" //FP
+        },
+        "reality": {
+          "enabled": true,
+          "public_key": "", //Public-Key
+          "short_id": ""
+        }
+      }
+    },
+    //Для Steam,Torrent и т.д
+    {
+      "type": "vless",
+      "tag": "proxy-ru",
+      "server": "",
+      "server_port": 0,
       "uuid": "",
       "flow": "",
       "packet_encoding": "xudp",
@@ -43,7 +74,7 @@
         "tag": "dns-remote",
         "type": "udp",
         "server": "1.1.1.1",
-        "detour": "proxy"
+        "detour": "proxy-fi"
       }
     ],
     "strategy": "ipv4_only",
@@ -76,6 +107,10 @@
     },
     "rules": [
       {
+        "process_name": ["steam","qbittorrent"], //Исключить приложение из под FI(TUN)
+        "outbound": "proxy-ru"
+      },
+      {
         "protocol": "dns",
         "action": "hijack-dns"
       },
@@ -84,7 +119,7 @@
         "outbound": "direct"
       }
     ],
-    "final": "proxy",
+    "final": "proxy-fi",
     "auto_detect_interface": true
   }
 }
