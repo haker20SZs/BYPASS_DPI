@@ -6,28 +6,28 @@
     {
       "type": "vless",
       "tag": "proxy",
-      "server": "",
-      "server_port": 0,
-      "uuid": "",
+      "server": "45.151.30.120",
+      "server_port": 26212,
+      "uuid": "27bec884-cdca-4e93-b357-e1ddf41ae7cf",
       "flow": "",
       "packet_encoding": "xudp",
       "transport": {
         "type": "grpc",
-        "service_name": "",
+        "service_name": "PQ0kd–5VfN;Oq!=",
         "idle_timeout": "60s",
         "ping_timeout": "20s",
         "permit_without_stream": false
       },
       "tls": {
         "enabled": true,
-        "server_name": "", //SNI
+        "server_name": "cdn-tinkoff.ru", //SNI
         "utls": {
           "enabled": true,
           "fingerprint": "qq" //FP
         },
         "reality": {
           "enabled": true,
-          "public_key": "", //Public-Key
+          "public_key": "PAjqUU_IKkby_83nDL4kUvbn1oc48QRYdFhTHlqT-Q8", //Public-Key
           "short_id": ""
         }
       }
@@ -35,43 +35,16 @@
     {
       "type": "direct",
       "tag": "direct"
-    },
-    {
-      "type": "block",
-      "tag": "block"
     }
   ],
   "dns": {
     "servers": [
       {
         "tag": "dns-remote",
-        "type": "https",
-        "server": "77.88.8.8"
-      },
-      {
         "type": "udp",
-        "server": "77.88.8.8",
-        "server_port": 53,
-        "tag": "dns-direct"
-      },
-      {
-        "type": "fakeip",
-        "tag": "dns-fake",
-        "inet4_range": "198.18.0.0/15",
-        "inet6_range": "fc00::/18"
+        "server": "1.1.1.1",
+        "detour": "proxy"
       }
-    ],
-    "rules": [
-        {
-            "clash_mode": "Global",
-            "server": "dns-remote"
-        },
-        {
-            "disable_cache": true,
-            "inbound": "tun-in",
-            "query_type": ["A","AAAA"],
-            "server": "dns-fake"
-        }
     ],
     "strategy": "ipv4_only",
     "independent_cache": true
@@ -90,9 +63,9 @@
       "sniff": true
     },
     {
-      "type": "mixed",
-      "tag": "mixed-in",
-      "listen": "127.0.0.1",
+      "type": "socks",
+      "tag": "socks-out",
+      "listen": "0.0.0.0",
       "listen_port": 1080
     }
   ],
