@@ -2,13 +2,13 @@
   "log": {
     "disabled": true
   },
-  //Для браузера и т.д
   "outbounds": [
     {
       "type": "vless",
-      "tag": "proxy-fi",
-      "server": "",
-      "server_port": 0,
+      "tag": "proxy-ru",
+      "server": "IP",
+      "server_port": Port,
+      "bind_interface": "Ethernet",
       "uuid": "",
       "flow": "",
       "packet_encoding": "xudp",
@@ -33,12 +33,12 @@
         }
       }
     },
-    //Для Steam,Torrent и т.д
     {
       "type": "vless",
-      "tag": "proxy-ru",
-      "server": "",
-      "server_port": 0,
+      "tag": "proxy-lv",
+      "server": "IP",
+      "server_port": Port,
+      "bind_interface": "Ethernet 7",
       "uuid": "",
       "flow": "",
       "packet_encoding": "xudp",
@@ -65,61 +65,89 @@
     },
     {
       "type": "direct",
-      "tag": "direct"
+      "tag": "direct-in"
     }
   ],
   "dns": {
     "servers": [
       {
         "tag": "dns-remote",
-        "type": "udp",
+        "type": "tcp",
         "server": "1.1.1.1",
-        "detour": "proxy-fi"
+        "detour": "proxy-ru"
       }
     ],
-    "strategy": "ipv4_only",
+    "rules": [
+      {
+        "server": "dns-remote",
+        "query_type": [
+          "A",
+          "AAAA"
+        ]
+      }
+    ],
     "independent_cache": true
   },
   "inbounds": [
     {
       "type": "tun",
       "tag": "tun-in",
-      "interface_name": "TunTun",
-      "address": "172.19.0.1/30",
       "mtu": 1500,
+      "interface_name": "TunTun",
+      "address": ["172.19.0.1/30", "fdfe:dcba:9876::1/126"],
       "stack": "mixed",
-      "endpoint_independent_nat": true,
       "auto_route": true,
-      "strict_route": true,
-      "sniff": true
-    },
-    {
-      "type": "socks",
-      "tag": "socks-out",
-      "listen": "0.0.0.0",
-      "listen_port": 1080
+      "sniff": true,
+      "strict_route": true
     }
   ],
   "route": {
+
     "default_domain_resolver": {
       "server": "dns-remote",
       "strategy": "prefer_ipv4"
     },
+
     "rules": [
       {
-        "process_name": ["steam","qbittorrent"], //Исключить приложение из под FI(TUN)
+        "action": "sniff"
+      },
+      {
+        "process_name": [
+
+          //Клиенты для скачивания
+          "steam.exe","qbittorrent.exe",
+
+          //Онлайн игры
+          "cs2.exe","FragPunk.exe",
+
+          //Защита игр
+          "FragNeacClient.exe"
+
+        ],
+
         "outbound": "proxy-ru"
       },
       {
-        "protocol": "dns",
-        "action": "hijack-dns"
+        "ip_cidr": ["10.0.0.0/8", "172.16.0.0/12", "192.168.0.0/16", "169.254.0.0/16", "224.0.0.0/4", "255.255.255.255"],
+        "outbound": "direct-in"
       },
       {
-        "ip_cidr": ["10.0.0.0/8", "172.16.0.0/12", "192.168.0.0/16", "169.254.0.0/16", "224.0.0.0/4", "255.255.255.255"],
-        "outbound": "direct"
+        "mode": "or",
+        "type": "logical",
+        "rules": [
+          {
+            "protocol": "dns"
+          },
+          {
+            "port": 53
+          }
+        ],
+        "action": "hijack-dns"
       }
     ],
-    "final": "proxy-fi",
+    "final": "proxy-lv",
+    "override_android_vpn": false,
     "auto_detect_interface": true
   }
 }
