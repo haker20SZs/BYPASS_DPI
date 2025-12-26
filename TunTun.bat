@@ -38,7 +38,7 @@ echo  3 - Остановить и удалить из автозагрузки
 echo  0 - Выход
 echo.
 echo ========================================
-set /p choice="Выберите действие [0-5]: "
+set /p choice="Выберите действие [0-3]: "
 
 if "%choice%"=="1" goto check
 if "%choice%"=="2" goto install
@@ -123,4 +123,5 @@ if errorlevel 1 (
 
 echo.
 pause
+
 goto menu
